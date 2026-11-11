@@ -1,0 +1,548 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Rawa Links</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+
+<style>
+  /* Layout: single centered column (max 36rem) with floating glass controls; dashboard opens as a sheet. */
+  :root{
+    --bg:#f3f1fb; --glow1:rgba(124,58,237,.30); --glow2:rgba(8,145,178,.24);
+    --card:rgba(255,255,255,.66); --edge:rgba(255,255,255,.9); --fg:#15132b; --mute:#5b5877;
+    --a1:#7c3aed; --a2:#0e7490; --btn1:#7c3aed; --btn2:#0e7490; --tile:#ffffff;
+    --field:rgba(21,19,43,.06); --overlay:rgba(21,19,43,.5); --shadow:rgba(76,29,149,.18); --danger:#dc2626;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0a0c1c; --glow1:rgba(139,92,246,.34); --glow2:rgba(34,211,238,.18);
+      --card:rgba(255,255,255,.07); --edge:rgba(255,255,255,.15); --fg:#eef0fb; --mute:#a0a2c0;
+      --a1:#a78bfa; --a2:#22d3ee; --tile:#1b1e36; --field:rgba(255,255,255,.08);
+      --overlay:rgba(0,0,0,.62); --shadow:rgba(0,0,0,.45); --danger:#f87171; color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0a0c1c; --glow1:rgba(139,92,246,.34); --glow2:rgba(34,211,238,.18);
+    --card:rgba(255,255,255,.07); --edge:rgba(255,255,255,.15); --fg:#eef0fb; --mute:#a0a2c0;
+    --a1:#a78bfa; --a2:#22d3ee; --tile:#1b1e36; --field:rgba(255,255,255,.08);
+    --overlay:rgba(0,0,0,.62); --shadow:rgba(0,0,0,.45); --danger:#f87171; color-scheme:dark;
+  }
+  body{
+    background-color:var(--bg);
+    background-image:radial-gradient(900px 520px at 8% -8%,var(--glow1),transparent 62%),
+                     radial-gradient(800px 520px at 100% 6%,var(--glow2),transparent 60%);
+    background-attachment:fixed; color:var(--fg); min-height:100vh; font-size:16px;
+    padding-left:max(16px,env(safe-area-inset-left,0px)); padding-right:max(16px,env(safe-area-inset-right,0px));
+    padding-block:0; transition:background-color .3s,color .3s;
+  }
+  html[lang="ar"] body{font-family:'Tajawal','Segoe UI',Tahoma,sans-serif}
+  html[lang="en"] body{font-family:'Inter','Segoe UI',system-ui,sans-serif}
+  .glass{background:var(--card);border:1px solid var(--edge);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 10px 30px var(--shadow)}
+  .muted{color:var(--mute)}
+  .grad-text{background:linear-gradient(90deg,var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .btn-grad{background:linear-gradient(135deg,var(--btn1),var(--btn2));color:#fff}
+  .btn-grad:disabled{opacity:.5}
+  button{cursor:pointer;color:inherit;font:inherit}
+  :focus-visible{outline:2px solid var(--a1);outline-offset:2px}
+  .topbar{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:0;right:0;z-index:40;display:flex;justify-content:space-between;
+    padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));pointer-events:none}
+  .topbar>div{display:flex;gap:8px;pointer-events:auto}
+  .round{width:42px;height:42px;border-radius:9999px;display:grid;place-items:center;font-size:18px}
+  .avatar-ring{padding:4px;border-radius:9999px;background:conic-gradient(from 0deg,#8b5cf6,#06b6d4,#f472b6,#fbbf24,#8b5cf6);animation:spin 7s linear infinite;box-shadow:0 0 32px rgba(139,92,246,.5)}
+  .avatar-ring>div{animation:spin 7s linear infinite reverse;border-radius:9999px;overflow:hidden;background:var(--bg)}
+  .mono{width:100%;height:100%;display:grid;place-items:center;font-size:2.8rem;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--btn1),var(--btn2))}
+  .banner{height:9.5rem;background-size:cover;background-position:center}
+  .banner.none{background-image:radial-gradient(circle at 20% 30%,rgba(255,255,255,.35),transparent 40%),linear-gradient(120deg,#7c3aed,#0e7490 55%,#f472b6)}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @keyframes shine{to{transform:translateX(120%)}}
+  @keyframes pulse{50%{box-shadow:0 0 0 7px rgba(124,58,237,.16)}}
+  .link-btn{transition:transform .25s,box-shadow .25s;animation:rise .55s both}
+  .link-btn:hover{transform:translateY(-3px) scale(1.012);box-shadow:0 16px 36px var(--shadow)}
+  .link-btn:active{transform:scale(.985)}
+  .featured{position:relative;overflow:hidden;padding-block:1.3rem!important;border:1px solid transparent;
+    background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(120deg,#8b5cf6,#06b6d4,#f472b6) border-box;
+    animation:rise .55s both,pulse 2.6s ease-in-out infinite}
+  .featured::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.32) 50%,transparent 65%);transform:translateX(-120%);animation:shine 3.2s infinite;pointer-events:none}
+  .ico{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;flex:none;overflow:hidden;font-size:22px;color:#fff;background:var(--tile)}
+  .ico svg{width:26px;height:26px}
+  .ico.plain{color:var(--fg)}
+  .inp{width:100%;padding:.65rem .9rem;border-radius:.9rem;background:var(--field);border:1px solid var(--edge);color:var(--fg);outline:none;font:inherit}
+  .inp:focus{border-color:var(--a1);box-shadow:0 0 0 3px rgba(124,58,237,.25)}
+  .toast{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom,0px));left:50%;transform:translate(-50%,40px);opacity:0;transition:.35s;z-index:100;pointer-events:none;max-width:90vw;text-align:center}
+  .toast.show{transform:translate(-50%,0);opacity:1}
+  .modal{position:fixed;inset:0;z-index:60;background:var(--overlay);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;
+    padding:16px max(16px,env(safe-area-inset-right,0px)) 16px max(16px,env(safe-area-inset-left,0px))}
+  .modal.open{display:flex}
+  .drag-over{outline:2px dashed var(--a1)}
+  .tab.active{background:linear-gradient(135deg,var(--btn1),var(--btn2));color:#fff}
+  .bar{background:var(--field)}
+  .danger{color:var(--danger)}
+  .thumb{width:56px;height:56px;border-radius:14px;object-fit:cover;background:var(--field)}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="topbar">
+  <div>
+    <button id="themeBtn" class="glass round" aria-label="theme">☾</button>
+    <button id="langBtn" class="glass round text-sm font-bold" style="width:auto;padding:0 14px">EN</button>
+  </div>
+  <div>
+    <button id="shareBtn" class="glass round" aria-label="share">⤴</button>
+    <button id="adminBtn" class="glass round" aria-label="dashboard" hidden>⚙</button>
+  </div>
+</div>
+
+<main id="page" class="max-w-xl mx-auto pt-20 pb-24" style="padding-top:calc(5rem + env(safe-area-inset-top,0px))"></main>
+
+<div id="adminModal" class="modal">
+  <div class="glass rounded-3xl w-full max-w-2xl flex flex-col overflow-hidden" style="max-height:92vh">
+    <div class="flex items-center justify-between gap-2 p-4" style="border-bottom:1px solid var(--edge)">
+      <h2 class="font-extrabold text-lg grad-text" data-i="dashboard"></h2>
+      <div class="flex items-center gap-2">
+        <button id="saveBtn" class="btn-grad px-4 py-2 rounded-xl text-sm font-bold"></button>
+        <button class="close text-2xl muted px-2" aria-label="close">✕</button>
+      </div>
+    </div>
+    <div class="flex gap-2 p-3 overflow-x-auto" id="tabs"></div>
+    <div id="adminBody" class="p-4 overflow-y-auto flex-1 min-w-0"></div>
+  </div>
+</div>
+
+<div id="itemModal" class="modal" style="z-index:70">
+  <form id="itemForm" class="glass rounded-3xl w-full max-w-md p-5 space-y-3 overflow-y-auto" style="max-height:92vh"></form>
+</div>
+
+<div id="shareModal" class="modal">
+  <div class="glass rounded-3xl w-full max-w-sm p-6 text-center space-y-4">
+    <h3 class="font-extrabold text-lg grad-text" data-i="sharePage"></h3>
+    <div id="qrBox" class="mx-auto p-3 rounded-2xl w-fit" style="background:#fff"></div>
+    <input id="shareUrl" class="inp text-center text-sm" readonly dir="ltr" aria-label="url">
+    <div class="flex gap-2">
+      <button id="copyBtn" class="btn-grad flex-1 py-2.5 rounded-xl font-bold" data-i="copy"></button>
+      <button id="dlQr" class="glass flex-1 py-2.5 rounded-xl font-bold" data-i="downloadQr"></button>
+    </div>
+    <button class="close muted text-sm" data-i="close"></button>
+  </div>
+</div>
+
+<div id="toast" class="toast glass px-5 py-3 rounded-2xl font-bold" role="status"></div>
+
+<script>
+(() => {
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const LS = { g(k){ try{ return localStorage.getItem(k) }catch(e){ return null } }, s(k,v){ try{ localStorage.setItem(k,v) }catch(e){} } };
+const uid = () => 'i' + Math.random().toString(36).slice(2, 9);
+
+/* ===== بيانات احتياطية تُستخدم فقط إذا تعذّر تحميل data.json ===== */
+const DEFAULTS = {
+  profile:{ name:'اسمك هنا', handle:'@username', bio:'مطوّر ومصمم محتوى. أشارك أحدث الأفكار والأدوات والمشاريع.', email:'', shareUrl:'', avatar:'', banner:'', verified:true },
+  items:[
+    {id:'i1',type:'link',title:'أحدث فيديو لي',url:'https://youtube.com',icon:'',featured:true},
+    {id:'i2',type:'link',title:'تليجرام',url:'https://t.me/username',icon:''},
+    {id:'i3',type:'link',title:'إنستغرام',url:'https://instagram.com/username',icon:''},
+    {id:'i4',type:'link',title:'تيك توك',url:'https://tiktok.com/@username',icon:''},
+    {id:'i5',type:'link',title:'واتساب',url:'https://wa.me/212600000000',icon:''}
+  ]
+};
+
+const I18N = {
+ ar:{dashboard:'لوحة التحكم',links:'الروابط',profile:'الملف الشخصي',stats:'الإحصائيات',messages:'الرسائل',
+  sharePage:'مشاركة الصفحة',copy:'نسخ الرابط',downloadQr:'تحميل QR',close:'إغلاق',copied:'تم نسخ الرابط ✅',
+  contactTitle:'تواصل معي',email:'بريدك الإلكتروني',msg:'رسالتك (اختياري)',send:'إرسال',sent:'تم الإرسال، شكراً لك 💜',
+  sendFail:'تعذّر الإرسال حالياً',orMail:'أو راسلني على',
+  add:'＋ إضافة عنصر',edit:'تعديل',save:'حفظ ونشر',saved:'تم الحفظ والنشر ✅',saveFail:'تعذّر الحفظ، حاول مجدداً',
+  readOnly:'عرض فقط: لا تملك صلاحية التعديل',noSave:'الحفظ غير متاح من هذا العرض',cancel:'إلغاء',
+  type:'النوع',title:'العنوان',url:'الرابط',icon:'أيقونة إيموجي (اتركه فارغاً للتعرّف التلقائي)',featured:'رابط مميز ⭐',
+  t_link:'رابط',t_video:'فيديو يوتيوب',t_image:'صورة / جرافيك',t_heading:'عنوان قسم',
+  totalClicks:'إجمالي النقرات',views:'مشاهدات الصفحة',last7:'آخر 7 أيام',perLink:'النقرات لكل رابط',
+  name:'الاسم',handle:'المعرّف',bio:'النبذة',avatar:'الصورة الشخصية',banner:'صورة البانر',verified:'شارة التوثيق ✔',
+  contactEmail:'بريد التواصل (يظهر للزوار)',shareUrl:'الرابط العام لصفحتك (لمشاركته وللـ QR)',upload:'رفع صورة',remove:'إزالة',
+  noMsgs:'لا توجد رسائل بعد',imgLink:'رابط عند النقر على الصورة (اختياري)',tip:'اسحب العناصر أو استخدم الأسهم لإعادة الترتيب',
+  badEmail:'أدخل بريداً صحيحاً',footer:'صُنع بـ 💜',sure:'اضغط مرة أخرى للحذف',loading:'جارٍ التحميل…',
+  statsOff:'الإحصائيات غير متاحة في هذا العرض',qrFail:'لم يتم الحفظ',unsaved:'تغييرات غير منشورة',noImg:'اختر صورة أولاً'},
+ en:{dashboard:'Dashboard',links:'Links',profile:'Profile',stats:'Analytics',messages:'Messages',
+  sharePage:'Share page',copy:'Copy link',downloadQr:'Download QR',close:'Close',copied:'Link copied ✅',
+  contactTitle:'Get in touch',email:'Your email',msg:'Message (optional)',send:'Send',sent:'Sent, thank you 💜',
+  sendFail:'Could not send right now',orMail:'or email me at',
+  add:'＋ Add item',edit:'Edit',save:'Save & publish',saved:'Saved and published ✅',saveFail:'Could not save, try again',
+  readOnly:'View only: you cannot edit this page',noSave:'Saving is not available from this view',cancel:'Cancel',
+  type:'Type',title:'Title',url:'URL',icon:'Emoji icon (leave empty to auto-detect)',featured:'Featured ⭐',
+  t_link:'Link',t_video:'YouTube video',t_image:'Image / graphic',t_heading:'Section heading',
+  totalClicks:'Total clicks',views:'Page views',last7:'Last 7 days',perLink:'Clicks per link',
+  name:'Name',handle:'Handle',bio:'Bio',avatar:'Avatar',banner:'Banner image',verified:'Verified badge ✔',
+  contactEmail:'Contact email (shown to visitors)',shareUrl:'Public URL of your page (for sharing and QR)',upload:'Upload image',remove:'Remove',
+  noMsgs:'No messages yet',imgLink:'Link when image is clicked (optional)',tip:'Drag items or use the arrows to reorder',
+  badEmail:'Enter a valid email',footer:'Made with 💜',sure:'Tap again to delete',loading:'Loading…',
+  statsOff:'Analytics are not available in this view',qrFail:'Not saved',unsaved:'Unpublished changes',noImg:'Pick an image first'}
+};
+
+/* ===== أيقونات المنصات (رسوم مضمّنة بألوان العلامات) ===== */
+const tx = (s, size = 13) => `<text x="12" y="${12 + size * .36}" text-anchor="middle" font-size="${size}" font-weight="800" fill="#fff" font-family="Arial,sans-serif">${s}</text>`;
+const BR = {
+ telegram:{re:/t\.me|telegram/i,bg:'#229ED9',svg:'<path d="M21.5 3.3 2.6 10.5l5.3 2 2.1 6.5 3.1-3.8 5.3 3.9z" fill="#fff"/>'},
+ instagram:{re:/instagram/i,bg:'linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5)',svg:'<rect x="4" y="4" width="16" height="16" rx="5" fill="none" stroke="#fff" stroke-width="2"/><circle cx="12" cy="12" r="3.7" fill="none" stroke="#fff" stroke-width="2"/><circle cx="16.9" cy="7.1" r="1.1" fill="#fff"/>'},
+ youtube:{re:/youtube|youtu\.be/i,bg:'#ff0000',svg:'<rect x="3" y="6" width="18" height="12" rx="4" fill="#fff"/><path d="M10 9.4v5.2l4.6-2.6z" fill="#ff0000"/>'},
+ tiktok:{re:/tiktok/i,bg:'#111',svg:'<path d="M14 4v10.2a3 3 0 1 1-3-3" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M14 4c.3 2.2 1.8 3.6 4 3.8" fill="none" stroke="#25f4ee" stroke-width="2.4" stroke-linecap="round"/>'},
+ x:{re:/(^|\/\/|\.)x\.com|twitter\.com/i,bg:'#000',svg:'<path d="M5.5 5.5l13 13M18.5 5.5l-13 13" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>'},
+ whatsapp:{re:/wa\.me|whatsapp/i,bg:'#25D366',svg:'<path d="M12 3.8a8.2 8.2 0 0 0-7 12.4L3.9 20.2l4.1-1.1A8.2 8.2 0 1 0 12 3.8z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><path d="M9 8.6c0 3.2 3.2 6.4 6.4 6.4l.9-1.6-2-1-1 .8c-.8-.4-1.6-1.2-2-2l.8-1-1-2z" fill="#fff"/>'},
+ facebook:{re:/facebook|fb\.com/i,bg:'#1877f2',svg:tx('f',20)},
+ linkedin:{re:/linkedin/i,bg:'#0a66c2',svg:tx('in',12)},
+ snapchat:{re:/snapchat/i,bg:'#fffc00',svg:'<text x="12" y="17" text-anchor="middle" font-size="15">👻</text>'},
+ discord:{re:/discord/i,bg:'#5865f2',svg:'<text x="12" y="17" text-anchor="middle" font-size="14">🎮</text>'},
+ twitch:{re:/twitch/i,bg:'#9146ff',svg:tx('T',15)},
+ spotify:{re:/spotify/i,bg:'#1db954',svg:'<path d="M5 9c4.5-1.4 9.5-1 14 1.4M6 12.6c3.7-1 7.4-.7 11 1.2M7 16c3-.7 6-.5 8.6 1" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>'},
+ github:{re:/github/i,bg:'#24292f',svg:tx('GH',10)},
+ behance:{re:/behance/i,bg:'#1769ff',svg:tx('Bē',11)},
+ pinterest:{re:/pinterest/i,bg:'#e60023',svg:tx('P',16)},
+ threads:{re:/threads\.net/i,bg:'#000',svg:tx('@',16)}
+};
+const LINK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>';
+function brandOf(url){ for (const k in BR) if (BR[k].re.test(url || '')) return BR[k]; return null; }
+function iconHTML(it){
+  const ic = (it.icon || '').trim();
+  if (ic) return `<span class="ico plain"><span>${esc(ic)}</span></span>`;
+  const b = brandOf(it.url);
+  if (b) return `<span class="ico" style="background:${b.bg}"><svg viewBox="0 0 24 24">${b.svg}</svg></span>`;
+  return `<span class="ico plain">${LINK_SVG}</span>`;
+}
+function safeUrl(u){ u = String(u || '').trim(); if (!u) return '#'; if (/^(https?:|mailto:|tel:)/i.test(u)) return u; return 'https://' + u; }
+function artURI(){
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 360"><defs><linearGradient id="a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c3aed"/><stop offset=".55" stop-color="#0e7490"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs><rect width="900" height="360" fill="url(#a)"/><g fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="2"><path d="M0 250C150 150 300 330 450 230S750 130 900 230"/><path d="M0 290C150 190 300 370 450 270S750 170 900 270"/><path d="M0 210C150 110 300 290 450 190S750 90 900 190"/></g><circle cx="740" cy="90" r="46" fill="#fff" fill-opacity=".22"/></svg>';
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+}
+const srcOf = it => it.src === '@art' ? artURI() : it.src;
+
+/* ===== الحالة ===== */
+let D = null, lang = 'ar', dirty = false, tab = 'links';
+let db = null, userCap = null, canEdit = false;
+const t = k => (I18N[lang] && I18N[lang][k]) ?? I18N.ar[k] ?? k;
+
+function toast(m){ const el = $('#toast'); el.textContent = m; el.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove('show'), 2400); }
+function logEvent(o){ if (!db) return; try { db.collection('events').add({ ...o, ts: Date.now() }).catch(() => {}); } catch (e) {} }
+
+/* ===== الصفحة العامة ===== */
+function render(){
+  const p = D.profile, ar = lang === 'ar';
+  document.title = p.name || 'Rawa Links';
+  const badge = p.verified ? '<svg class="inline w-5 h-5 align-middle" viewBox="0 0 24 24"><defs><linearGradient id="vg"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs><path fill="url(#vg)" d="M12 1l2.9 2.1 3.6-.1 1.1 3.4 2.9 2.2-1.1 3.4 1.1 3.4-2.9 2.2-1.1 3.4-3.6-.1L12 23l-2.9-2.1-3.6.1-1.1-3.4L1.5 15.4l1.1-3.4-1.1-3.4 2.9-2.2 1.1-3.4 3.6.1z"/><path d="M8 12.2l2.7 2.7L16 9.6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
+  const initial = (p.name || '?').trim().slice(0, 1);
+  const av = p.avatar ? `<img src="${esc(p.avatar)}" class="w-full h-full object-cover" alt="">` : `<div class="mono">${esc(initial)}</div>`;
+  const banner = p.banner ? `<div class="banner" style="background-image:url('${esc(p.banner)}')"></div>` : '<div class="banner none"></div>';
+
+  const items = D.items.map((it, i) => {
+    const delay = `style="animation-delay:${i * 70}ms"`;
+    if (it.type === 'heading') return `<h3 class="pt-3 text-sm font-bold muted tracking-wide" ${delay}>${esc(it.title)}</h3>`;
+    if (it.type === 'image'){
+      const img = `<img src="${esc(srcOf(it))}" alt="${esc(it.title)}" loading="lazy" class="w-full rounded-3xl object-cover shadow-lg" style="max-height:18rem">`;
+      return `<div class="link-btn" ${delay}>${it.link ? `<a href="${esc(safeUrl(it.link))}" target="_blank" rel="noopener" data-track="${esc(it.id)}">${img}</a>` : img}</div>`;
+    }
+    if (it.type === 'video'){
+      return `<a href="${esc(safeUrl(it.url))}" target="_blank" rel="noopener" data-track="${esc(it.id)}" class="link-btn glass rounded-3xl flex items-center gap-3 p-3" ${delay}>
+        <span class="ico" style="background:#ff0000;width:64px;height:64px;border-radius:18px"><svg viewBox="0 0 24 24" style="width:34px;height:34px">${BR.youtube.svg}</svg></span>
+        <span class="flex-1 min-w-0"><span class="block font-bold">${esc(it.title || 'YouTube')}</span><span class="block text-xs muted">YouTube ${ar ? '· شاهد الآن' : '· Watch now'}</span></span>
+        <span class="w-8 text-center muted">${ar ? '‹' : '›'}</span></a>`;
+    }
+    return `<a href="${esc(safeUrl(it.url))}" target="_blank" rel="noopener" data-track="${esc(it.id)}"
+      class="link-btn glass ${it.featured ? 'featured' : ''} rounded-2xl flex items-center gap-3 p-3" ${delay}>
+      ${iconHTML(it)}
+      <span class="flex-1 min-w-0 text-center font-bold ${it.featured ? 'text-lg' : ''}">${esc(it.title)}</span>
+      <span class="w-11 text-center muted">${ar ? '‹' : '›'}</span></a>`;
+  }).join('');
+
+  $('#page').innerHTML = `
+    <section class="glass rounded-[2rem] overflow-hidden">
+      ${banner}
+      <div class="px-5 pb-6 text-center" style="margin-top:-3.5rem">
+        <div class="avatar-ring w-28 h-28 mx-auto"><div class="w-full h-full">${av}</div></div>
+        <h1 class="mt-3 text-2xl font-extrabold">${esc(p.name)} ${badge}</h1>
+        <p class="muted text-sm" dir="ltr">${esc(p.handle)}</p>
+        <p class="mt-2 leading-relaxed">${esc(p.bio)}</p>
+      </div>
+    </section>
+    <section class="mt-5 space-y-3">${items}</section>
+    <section class="glass rounded-3xl p-5 mt-6">
+      <h3 class="font-extrabold mb-3 grad-text text-lg">${t('contactTitle')}</h3>
+      <form id="contactForm" class="space-y-2.5">
+        <input id="cEmail" name="email" type="email" required class="inp" placeholder="${t('email')}" dir="ltr">
+        <textarea id="cMsg" name="msg" rows="3" class="inp" placeholder="${t('msg')}"></textarea>
+        <button class="btn-grad w-full py-3 rounded-xl font-bold">${t('send')}</button>
+      </form>
+      ${p.email ? `<p class="text-sm muted mt-3 text-center">${t('orMail')} <span dir="ltr" style="user-select:all">${esc(p.email)}</span></p>` : ''}
+    </section>
+    <p class="text-center muted text-xs mt-8">${t('footer')}</p>`;
+
+  $$('[data-track]').forEach(a => a.addEventListener('click', () => logEvent({ k: 'click', id: a.dataset.track })));
+  $('#contactForm').addEventListener('submit', submitContact);
+}
+
+async function submitContact(e){
+  e.preventDefault();
+  const f = e.target, email = f.email.value.trim(), msg = f.msg.value.trim();
+  if (!/^\S+@\S+\.\S+$/.test(email)) return toast(t('badEmail'));
+  if (!db) return toast(t('sendFail'));
+  try { await db.collection('messages').add({ email, msg, ts: Date.now() }); f.reset(); toast(t('sent')); }
+  catch (err) { toast(t('sendFail')); }
+}
+
+/* ===== المشاركة و QR ===== */
+function pageUrl(){ return (D.profile.shareUrl || '').trim() || location.href.split('#')[0]; }
+function openShare(){
+  const url = pageUrl();
+  $('#shareUrl').value = url;
+  try {
+    const qr = qrcode(0, 'M'); qr.addData(url); qr.make();
+    $('#qrBox').innerHTML = qr.createSvgTag({ cellSize: 6, margin: 0, scalable: true });
+    $('#qrBox svg').style.cssText = 'width:200px;height:200px;display:block';
+  } catch (e) { $('#qrBox').textContent = 'QR'; }
+  $('#shareModal').classList.add('open');
+}
+async function copyLink(){
+  const inp = $('#shareUrl');
+  try { await navigator.clipboard.writeText(inp.value); toast(t('copied')); }
+  catch (e) { inp.focus(); inp.select(); try { document.execCommand('copy'); toast(t('copied')); } catch (x) {} }
+}
+async function downloadQr(){
+  const svg = $('#qrBox svg'); if (!svg) return;
+  try {
+    const dl = await claude.use('downloads');
+    if (!dl) return toast(t('qrFail'));
+    await dl.save({ filename: 'qr-code.svg', data: new Blob([new XMLSerializer().serializeToString(svg)], { type: 'image/svg+xml' }) });
+  } catch (e) { toast(t('qrFail')); }
+}
+
+/* ===== حفظ ونشر ===== */
+function markDirty(){ dirty = true; updateSave(); render(); }
+function updateSave(){ const b = $('#saveBtn'); b.textContent = t('save') + (dirty ? ' •' : ''); b.disabled = !dirty; }
+async function save(){
+  if (!dirty) return;
+  let a = null;
+  try { a = await claude.use('artifact'); } catch (e) {}
+  if (!a) return toast(t('noSave'));
+  try {
+    await a.publish({ 'data.json': { content: JSON.stringify(D), contentType: 'application/json' } });
+    dirty = false; updateSave(); toast(t('saved'));
+  } catch (e) {
+    const c = e && e.code;
+    toast(c === 'not_writer' || c === 'not_granted' ? t('readOnly') : c === 'capability_disabled' ? t('noSave') : t('saveFail'));
+  }
+}
+
+/* ===== صور مرفوعة ===== */
+function shrink(file, max){
+  return new Promise((res, rej) => {
+    const r = new FileReader(); r.onerror = rej;
+    r.onload = () => {
+      const im = new Image(); im.onerror = rej;
+      im.onload = () => {
+        const k = Math.min(1, max / Math.max(im.width, im.height));
+        const c = document.createElement('canvas'); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k);
+        const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height);
+        res(c.toDataURL('image/jpeg', .82));
+      };
+      im.src = r.result;
+    };
+    r.readAsDataURL(file);
+  });
+}
+
+/* ===== لوحة التحكم ===== */
+function openAdmin(){ renderAdmin(); $('#adminModal').classList.add('open'); }
+function renderAdmin(){
+  updateSave();
+  const tabs = ['links', 'profile', 'stats', 'messages'];
+  $('#tabs').innerHTML = tabs.map(k => `<button class="tab glass px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap ${tab === k ? 'active' : ''}" data-tab="${k}">${t(k)}</button>`).join('');
+  $$('#tabs .tab').forEach(b => b.onclick = () => { tab = b.dataset.tab; renderAdmin(); });
+  const body = $('#adminBody');
+  if (tab === 'links') { body.innerHTML = viewLinks(); bindLinks(); }
+  else if (tab === 'profile') { body.innerHTML = viewProfile(); bindProfile(); }
+  else { body.innerHTML = `<p class="muted text-center py-10">${t('loading')}</p>`; fillAsync(tab); }
+}
+
+function viewLinks(){
+  const rows = D.items.map(it => `
+    <div class="glass rounded-2xl p-2.5 flex items-center gap-2" draggable="true" data-id="${esc(it.id)}">
+      <span class="cursor-grab px-1 muted select-none">⠿</span>
+      ${it.type === 'link' ? `<span style="zoom:.87;display:flex">${iconHTML(it)}</span>` : it.type === 'image' ? `<img class="thumb" style="width:40px;height:40px" src="${esc(srcOf(it))}" alt="">` : `<span class="ico plain" style="width:40px;height:40px">${it.type === 'video' ? '▶' : '§'}</span>`}
+      <div class="flex-1 min-w-0">
+        <p class="font-bold truncate">${esc(it.title || t('t_' + it.type))}${it.featured ? ' ⭐' : ''}</p>
+        <p class="text-xs muted truncate" dir="ltr">${esc(it.url || '')}</p>
+      </div>
+      <button data-up="${esc(it.id)}" class="px-1.5 muted" aria-label="up">▲</button><button data-down="${esc(it.id)}" class="px-1.5 muted" aria-label="down">▼</button>
+      <button data-edit="${esc(it.id)}" class="px-1.5" aria-label="edit">✎</button><button data-del="${esc(it.id)}" class="px-1.5 danger" aria-label="delete">✕</button>
+    </div>`).join('');
+  return `<div class="flex items-center justify-between gap-2 mb-3"><p class="text-xs muted">${t('tip')}</p>
+    <button id="addItem" class="btn-grad px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap">${t('add')}</button></div>
+    <div id="list" class="space-y-2">${rows}</div>`;
+}
+function bindLinks(){
+  const move = (id, d) => { const i = D.items.findIndex(x => x.id === id), j = i + d; if (j < 0 || j >= D.items.length) return; [D.items[i], D.items[j]] = [D.items[j], D.items[i]]; markDirty(); renderAdmin(); };
+  $('#addItem').onclick = () => openItem();
+  $$('[data-edit]').forEach(b => b.onclick = () => openItem(b.dataset.edit));
+  $$('[data-up]').forEach(b => b.onclick = () => move(b.dataset.up, -1));
+  $$('[data-down]').forEach(b => b.onclick = () => move(b.dataset.down, 1));
+  $$('[data-del]').forEach(b => b.onclick = () => {
+    if (b.dataset.armed) { D.items = D.items.filter(x => x.id !== b.dataset.del); markDirty(); renderAdmin(); return; }
+    b.dataset.armed = '1'; const old = b.textContent; b.textContent = '?'; b.title = t('sure'); toast(t('sure'));
+    setTimeout(() => { if (b.isConnected) { delete b.dataset.armed; b.textContent = old; } }, 3000);
+  });
+  let dragId = null;
+  $$('#list [draggable]').forEach(el => {
+    el.ondragstart = e => { dragId = el.dataset.id; e.dataTransfer.effectAllowed = 'move'; };
+    el.ondragover = e => { e.preventDefault(); el.classList.add('drag-over'); };
+    el.ondragleave = () => el.classList.remove('drag-over');
+    el.ondrop = e => {
+      e.preventDefault(); el.classList.remove('drag-over'); if (!dragId || dragId === el.dataset.id) return;
+      const from = D.items.findIndex(x => x.id === dragId), to = D.items.findIndex(x => x.id === el.dataset.id);
+      D.items.splice(to, 0, D.items.splice(from, 1)[0]); markDirty(); renderAdmin();
+    };
+  });
+}
+
+function viewProfile(){
+  const p = D.profile;
+  const f = (k, l, ta, dir) => `<label class="block text-sm font-bold">${t(l)}${ta ? `<textarea id="p_${k}" data-p="${k}" rows="3" class="inp mt-1">${esc(p[k])}</textarea>` : `<input id="p_${k}" data-p="${k}" class="inp mt-1" ${dir ? 'dir="ltr"' : ''} value="${esc(p[k])}">`}</label>`;
+  const up = (k, l) => `<div class="text-sm font-bold">${t(l)}<div class="flex items-center gap-3 mt-1">
+      ${p[k] ? `<img class="thumb" src="${esc(p[k])}" alt="">` : '<span class="thumb"></span>'}
+      <label class="glass px-3 py-2 rounded-xl text-sm font-bold cursor-pointer">${t('upload')}<input type="file" accept="image/*" data-up-${k} hidden></label>
+      ${p[k] ? `<button type="button" data-rm="${k}" class="glass px-3 py-2 rounded-xl text-sm font-bold danger">${t('remove')}</button>` : ''}</div></div>`;
+  return `<div class="space-y-3">${f('name', 'name')}${f('handle', 'handle', 0, 1)}${f('bio', 'bio', 1)}${up('avatar', 'avatar')}${up('banner', 'banner')}${f('email', 'contactEmail', 0, 1)}${f('shareUrl', 'shareUrl', 0, 1)}
+    <label class="flex items-center gap-2 font-bold"><input type="checkbox" id="p_verified" data-pc="verified" ${p.verified ? 'checked' : ''}> ${t('verified')}</label></div>`;
+}
+function bindProfile(){
+  $$('[data-p]').forEach(i => i.oninput = () => { D.profile[i.dataset.p] = i.value; dirty = true; updateSave(); render(); });
+  $$('[data-pc]').forEach(i => i.onchange = () => { D.profile[i.dataset.pc] = i.checked; markDirty(); });
+  const pick = (k, max) => { const inp = $(`[data-up-${k}]`); inp.onchange = async () => { if (!inp.files[0]) return; try { D.profile[k] = await shrink(inp.files[0], max); markDirty(); renderAdmin(); } catch (e) { toast(t('saveFail')); } }; };
+  pick('avatar', 360); pick('banner', 1100);
+  $$('[data-rm]').forEach(b => b.onclick = () => { D.profile[b.dataset.rm] = ''; markDirty(); renderAdmin(); });
+}
+
+async function fillAsync(which){
+  let html = '';
+  if (!db) html = `<p class="muted text-center py-10">${t('statsOff')}</p>`;
+  else {
+    try {
+      if (which === 'stats') {
+        const snap = await db.collection('events').orderBy('ts', 'desc').limit(3000).get();
+        html = viewStats(snap.docs.map(d => d.data()));
+      } else {
+        const snap = await db.collection('messages').orderBy('ts', 'desc').limit(200).get();
+        html = viewMessages(snap.docs.map(d => d.data()));
+      }
+    } catch (e) { html = `<p class="muted text-center py-10">${t('statsOff')}</p>`; }
+  }
+  if (tab === which) $('#adminBody').innerHTML = html;
+}
+function viewStats(ev){
+  const clicks = ev.filter(e => e.k === 'click'), views = ev.filter(e => e.k === 'view').length;
+  const dayKey = ts => new Date(ts).toLocaleDateString('en-CA');
+  const days = [...Array(7)].map((_, i) => { const d = new Date(Date.now() - (6 - i) * 864e5); return { k: dayKey(d.getTime()), l: d.toLocaleDateString(lang, { weekday: 'short' }) }; });
+  const vals = days.map(d => clicks.filter(c => dayKey(c.ts) === d.k).length), max = Math.max(1, ...vals);
+  const bars = days.map((d, i) => `<div class="flex-1 flex flex-col items-center gap-1 min-w-0"><span class="text-xs font-bold">${vals[i]}</span>
+    <div class="w-full rounded-t-lg btn-grad" style="height:${Math.max(4, vals[i] / max * 110)}px"></div><span class="text-[10px] muted">${esc(d.l)}</span></div>`).join('');
+  const cnt = {}; clicks.forEach(c => cnt[c.id] = (cnt[c.id] || 0) + 1);
+  const links = D.items.filter(i => i.type !== 'heading').sort((a, b) => (cnt[b.id] || 0) - (cnt[a.id] || 0));
+  const lmax = Math.max(1, ...links.map(l => cnt[l.id] || 0));
+  const per = links.map(l => `<div><div class="flex justify-between gap-2 text-sm"><span class="truncate">${esc(l.title || t('t_' + l.type))}</span><b>${cnt[l.id] || 0}</b></div>
+    <div class="h-2 rounded-full bar overflow-hidden"><div class="h-full btn-grad rounded-full" style="width:${(cnt[l.id] || 0) / lmax * 100}%"></div></div></div>`).join('');
+  return `<div class="grid grid-cols-2 gap-3 mb-4">
+    <div class="glass rounded-2xl p-4 text-center"><p class="text-3xl font-extrabold grad-text">${clicks.length}</p><p class="text-xs muted">${t('totalClicks')}</p></div>
+    <div class="glass rounded-2xl p-4 text-center"><p class="text-3xl font-extrabold grad-text">${views}</p><p class="text-xs muted">${t('views')}</p></div></div>
+    <p class="font-bold mb-2">${t('last7')}</p><div class="glass rounded-2xl p-4 flex items-end gap-2 mb-5" style="height:10.5rem">${bars}</div>
+    <p class="font-bold mb-2">${t('perLink')}</p><div class="space-y-3">${per}</div>`;
+}
+function viewMessages(ms){
+  if (!ms.length) return `<p class="text-center muted py-10">${t('noMsgs')}</p>`;
+  return ms.map(m => `<div class="glass rounded-2xl p-3 mb-2"><p class="font-bold text-sm" dir="ltr" style="user-select:all">${esc(m.email)}</p>
+    <p class="text-sm mt-1">${esc(m.msg) || '—'}</p><p class="text-[11px] muted mt-1">${esc(new Date(m.ts).toLocaleString(lang))}</p></div>`).join('');
+}
+
+/* ===== نافذة عنصر ===== */
+function openItem(id){
+  const it = D.items.find(x => x.id === id) || { id: uid(), type: 'link', title: '', url: '', icon: '', featured: false, isNew: true };
+  let tmpSrc = it.src || '';
+  const f = $('#itemForm'), types = ['link', 'video', 'image', 'heading'];
+  f.innerHTML = `<h3 class="font-extrabold grad-text text-lg">${t(it.isNew ? 'add' : 'edit')}</h3>
+    <label class="block text-sm font-bold">${t('type')}<select id="f_type" name="type" class="inp mt-1">${types.map(x => `<option value="${x}" ${it.type === x ? 'selected' : ''}>${t('t_' + x)}</option>`).join('')}</select></label>
+    <label class="block text-sm font-bold">${t('title')}<input id="f_title" name="title" class="inp mt-1" value="${esc(it.title)}"></label>
+    <label class="block text-sm font-bold" data-for="link video"><span>${t('url')}</span><input id="f_url" name="url" class="inp mt-1" dir="ltr" value="${esc(it.url || '')}" placeholder="https://"></label>
+    <label class="block text-sm font-bold" data-for="link">${t('icon')}<input id="f_icon" name="icon" class="inp mt-1" value="${esc(it.icon || '')}"></label>
+    <div class="text-sm font-bold" data-for="image"><div class="flex items-center gap-3"><img id="f_prev" class="thumb" src="${esc(it.src ? srcOf(it) : '')}" alt="">
+      <label class="glass px-3 py-2 rounded-xl text-sm font-bold cursor-pointer">${t('upload')}<input id="f_file" type="file" accept="image/*" hidden></label></div></div>
+    <label class="block text-sm font-bold" data-for="image">${t('imgLink')}<input id="f_link" name="link" class="inp mt-1" dir="ltr" value="${esc(it.link || '')}"></label>
+    <label class="flex items-center gap-2 font-bold" data-for="link"><input id="f_feat" type="checkbox" name="featured" ${it.featured ? 'checked' : ''}> ${t('featured')}</label>
+    <div class="flex gap-2 pt-2"><button class="btn-grad flex-1 py-2.5 rounded-xl font-bold">OK</button>
+    <button type="button" id="cancelItem" class="glass flex-1 py-2.5 rounded-xl font-bold">${t('cancel')}</button></div>`;
+  const sync = () => $$('[data-for]', f).forEach(el => el.hidden = !el.dataset.for.split(' ').includes(f.type.value));
+  f.type.onchange = sync; sync();
+  $('#f_file').onchange = async e => { if (!e.target.files[0]) return; try { tmpSrc = await shrink(e.target.files[0], 900); $('#f_prev').src = tmpSrc; } catch (x) { toast(t('saveFail')); } };
+  $('#cancelItem').onclick = () => $('#itemModal').classList.remove('open');
+  f.onsubmit = e => {
+    e.preventDefault();
+    const type = f.type.value;
+    if (type === 'image' && !tmpSrc) return toast(t('noImg'));
+    const o = { id: it.id, type, title: f.title.value.trim() };
+    if (type === 'link' || type === 'video') o.url = f.url.value.trim();
+    if (type === 'link') { o.icon = f.icon.value.trim(); o.featured = f.featured.checked; }
+    if (type === 'image') { o.src = tmpSrc; o.link = f.link.value.trim(); }
+    const i = D.items.findIndex(x => x.id === it.id);
+    if (i < 0) D.items.push(o); else D.items[i] = o;
+    $('#itemModal').classList.remove('open'); markDirty(); renderAdmin();
+  };
+  $('#itemModal').classList.add('open');
+}
+
+/* ===== الثيم واللغة ===== */
+function applyTheme(){
+  const pref = LS.g('lh_theme'), root = document.documentElement;
+  if (pref === 'dark' || pref === 'light') root.dataset.theme = pref; else root.removeAttribute('data-theme');
+  const dark = pref ? pref === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  $('#themeBtn').textContent = dark ? '☾' : '☀';
+}
+function applyLang(){
+  const d = document.documentElement; d.lang = lang; d.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  $('#langBtn').textContent = lang === 'ar' ? 'EN' : 'عربي';
+  $$('[data-i]').forEach(el => el.textContent = t(el.dataset.i));
+  updateSave();
+}
+
+/* ===== التشغيل ===== */
+async function loadData(){
+  try {
+    const ctl = new AbortController(); const to = setTimeout(() => ctl.abort(), 4000);
+    const r = await fetch('data.json', { signal: ctl.signal }); clearTimeout(to);
+    if (r.ok) { const j = await r.json(); if (j && j.profile && Array.isArray(j.items)) return j; }
+  } catch (e) {}
+  return JSON.parse(JSON.stringify(DEFAULTS));
+}
+async function caps(){
+  if (!window.claude || !claude.use) return;
+  try { db = await claude.use('db'); } catch (e) { db = null; }
+  try { userCap = await claude.use('user'); canEdit = !!(userCap && await userCap.canEdit()); } catch (e) {}
+  $('#adminBtn').hidden = !(canEdit || location.hash === '#admin');
+  try { if (db && !sessionStorage.getItem('lh_v')) { sessionStorage.setItem('lh_v', '1'); logEvent({ k: 'view' }); } } catch (e) {}
+}
+async function init(){
+  D = await loadData();
+  lang = LS.g('lh_lang') || 'ar';
+  applyTheme(); applyLang(); render();
+  $('#themeBtn').onclick = () => {
+    const pref = LS.g('lh_theme'), dark = pref ? pref === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    LS.s('lh_theme', dark ? 'light' : 'dark'); applyTheme();
+  };
+  $('#langBtn').onclick = () => { lang = lang === 'ar' ? 'en' : 'ar'; LS.s('lh_lang', lang); applyLang(); render(); if ($('#adminModal').classList.contains('open')) renderAdmin(); };
+  $('#shareBtn').onclick = openShare;
+  $('#adminBtn').onclick = openAdmin;
+  $('#copyBtn').onclick = copyLink;
+  $('#dlQr').onclick = downloadQr;
+  $('#saveBtn').onclick = save;
+  $$('.close').forEach(b => b.onclick = () => b.closest('.modal').classList.remove('open'));
+  $$('.modal').forEach(m => m.addEventListener('mousedown', e => { if (e.target === m) m.classList.remove('open'); }));
+  addEventListener('hashchange', () => { if (location.hash === '#admin') $('#adminBtn').hidden = false; });
+  caps();
+}
+init();
+})();
+</script>
